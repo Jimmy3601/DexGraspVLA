@@ -19,7 +19,7 @@ class DexGraspVLAPlanner:
         )
         self.model = self.client.models.list().data[0].id if model_name is None else model_name
     
-
+    # classify prompt, decompose instructions, generate instructions, mark bbox, check grasp/instruction/user prompt complete
     def request_task(self,
             task_name: str,
             frame_path: str = None,
