@@ -188,6 +188,90 @@ class DexGraspVLAPlanner:
         '''
         vLLM supports a set of parameters that are not part of the OpenAI API. In order to use them, you can pass them as extra parameters in the OpenAI client. Or directly merge them into the JSON payload if you are using HTTP call directly.
         extra_body, extra_header
+
+        browse https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html#chat-template for more details
+        
+        use_beam_search: bool = False
+        top_k: Optional[int] = None
+        min_p: Optional[float] = None
+        repetition_penalty: Optional[float] = None
+        length_penalty: float = 1.0
+        stop_token_ids: Optional[list[int]] = Field(default_factory=list)
+        include_stop_str_in_output: bool = False
+        ignore_eos: bool = False
+        min_tokens: int = 0
+        skip_special_tokens: bool = True
+        spaces_between_special_tokens: bool = True
+        truncate_prompt_tokens: Optional[Annotated[int, Field(ge=1)]] = None
+        allowed_token_ids: Optional[list[int]] = None
+        prompt_logprobs: Optional[int] = None
+
+        add_special_tokens: bool = Field(
+        default=True,
+        description=(
+            "If true (the default), special tokens (e.g. BOS) will be added to "
+            "the prompt."),
+    )
+    response_format: Optional[ResponseFormat] = Field(
+        default=None,
+        description=
+        ("Similar to chat completion, this parameter specifies the format of "
+         "output. Only {'type': 'json_object'}, {'type': 'json_schema'} or "
+         "{'type': 'text' } is supported."),
+    )
+    guided_json: Optional[Union[str, dict, BaseModel]] = Field(
+        default=None,
+        description="If specified, the output will follow the JSON schema.",
+    )
+    guided_regex: Optional[str] = Field(
+        default=None,
+        description=(
+            "If specified, the output will follow the regex pattern."),
+    )
+    guided_choice: Optional[list[str]] = Field(
+        default=None,
+        description=(
+            "If specified, the output will be exactly one of the choices."),
+    )
+    guided_grammar: Optional[str] = Field(
+        default=None,
+        description=(
+            "If specified, the output will follow the context free grammar."),
+    )
+    guided_decoding_backend: Optional[str] = Field(
+        default=None,
+        description=(
+            "If specified, will override the default guided decoding backend "
+            "of the server for this specific request. If set, must be one of "
+            "'outlines' / 'lm-format-enforcer'"))
+    guided_whitespace_pattern: Optional[str] = Field(
+        default=None,
+        description=(
+            "If specified, will override the default whitespace pattern "
+            "for guided json decoding."))
+    priority: int = Field(
+        default=0,
+        description=(
+            "The priority of the request (lower means earlier handling; "
+            "default: 0). Any priority other than 0 will raise an error "
+            "if the served model does not use priority scheduling."))
+    logits_processors: Optional[LogitsProcessors] = Field(
+        default=None,
+        description=(
+            "A list of either qualified names of logits processors, or "
+            "constructor objects, to apply when sampling. A constructor is "
+            "a JSON object with a required 'qualname' field specifying the "
+            "qualified name of the processor class/factory, and optional "
+            "'args' and 'kwargs' fields containing positional and keyword "
+            "arguments. For example: {'qualname': "
+            "'my_module.MyLogitsProcessor', 'args': [1, 2], 'kwargs': "
+            "{'param': 'value'}}."))
+    return_tokens_as_token_ids: Optional[bool] = Field(
+        default=None,
+        description=(
+            "If specified with 'logprobs', tokens are represented "
+            " as strings of the form 'token_id:{token_id}' so that tokens "
+            "that are not JSON-encodable can be identified."))
         '''
 
         chat_completion = self.client.chat.completions.create(
