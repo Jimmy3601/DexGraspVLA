@@ -8,6 +8,7 @@ from planner.utils import parse_json, extract_list
 class DexGraspVLAPlanner:
     def __init__(self,
                 api_key: str = "EMPTY", 
+                 # vllm server is started here
                 base_url: str = "http://localhost:8000/v1",
                 model_name: str = None):
 
@@ -183,6 +184,10 @@ class DexGraspVLAPlanner:
                 "type": "image_url",
                 "image_url": {"url": frame_path}
             })
+
+        '''
+        vLLM supports a set of parameters that are not part of the OpenAI API. In order to use them, you can pass them as extra parameters in the OpenAI client. Or directly merge them into the JSON payload if you are using HTTP call directly.
+        '''
 
         chat_completion = self.client.chat.completions.create(
             model=self.model,
