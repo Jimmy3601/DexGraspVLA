@@ -187,6 +187,7 @@ class DexGraspVLAPlanner:
 
         '''
         vLLM supports a set of parameters that are not part of the OpenAI API. In order to use them, you can pass them as extra parameters in the OpenAI client. Or directly merge them into the JSON payload if you are using HTTP call directly.
+        extra_body, extra_header
         '''
 
         chat_completion = self.client.chat.completions.create(
